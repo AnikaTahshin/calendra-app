@@ -9,7 +9,7 @@ const MainLayout =async ({children}:{children:React.ReactNode}) => {
   return (
   <main>
     {user ? <PrivateNavbar /> : <PublicNavbar />}
-    <section className="pt-25">
+    <section className="pt-36">
 {      children}
     </section>
   </main>);
