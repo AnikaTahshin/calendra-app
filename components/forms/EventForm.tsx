@@ -13,7 +13,7 @@ import Link from "next/link"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog"
 import { useRouter } from "next/navigation"
-import createEvent, { updateEvent } from "@/server/actions/events";
+import createEvent, { deleteEvent, updateEvent } from "@/server/actions/events";
 
 const EventForm = ({event} : {event?: {
     id: string;
@@ -39,14 +39,18 @@ const EventForm = ({event} : {event?: {
     })
 
     const [isDeletePending, startDeleteTransition] = useTransition();
+    const router = useRouter()
 
     async function onSubmit(data: z.infer<typeof eventsFormSchema>) {
         const action = event == null ? createEvent : updateEvent.bind(null, event.id);
         try {
             await action(data);
+            router.push('/events'); 
         } catch (error:any) {
+
+            console.log("see the error", error);
             form.setError("root", {
-                message: `There was an error saving your event: ${error instanceof Error ? error.message : "Unknown error"}`,
+                message: `There was an error saving your event: ${error.message}`,
             });
         }
     }
@@ -171,7 +175,7 @@ const EventForm = ({event} : {event?: {
                                 try {
                                     // Attempt to delete the event by its ID
                                     await deleteEvent(event.id)
-                                    router.push('/events')
+                                    // router.push('/events') 
                                 } catch (error: any) {
                                     // If something goes wrong, show an error at the root level of the form
                                     form.setError("root", {

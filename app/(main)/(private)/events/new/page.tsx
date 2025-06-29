@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import EventForm from "@/components/forms/EventForm";
 const NewEventPage = () => {
   return(
     <Card className="max-w-md mx-auto border-8 border-blue-200 shadow-2xl shadow-accent-foreground">
@@ -17,7 +18,7 @@ const NewEventPage = () => {
     <CardAction>Card Action</CardAction> */}
   </CardHeader>
   <CardContent>
-    {/* <p>Card Content</p> */}
+    <EventForm />
   </CardContent>
  
 </Card>

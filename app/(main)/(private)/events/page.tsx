@@ -1,12 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { CalendarPlus } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import React from 'react'
+import { CalendarPlus } from 'lucide-react' 
+import { auth } from '@clerk/nextjs/server'
 
-const Page = () => {
+export default async function EventsPage() {
+
+    const {userId, redirectToSignIn} = await auth()
+    if (!userId) {
+        redirectToSignIn()
+    }
+
+     const events = await getEvents(userId) // get all the created events from server 
   return (
-    <section className="flex flex-col items-center gap-16 animate-fade-in">
+   <section className="flex flex-col items-center gap-16 animate-fade-in">
         <div className="flex gap-4 items-baseline">
         <h1 className="text-4xl xl:text-5xl font-black mb-6">Events</h1>
         <Button className="bg-blue-500 hover:bg-blue-400 text-white py-6 hover:scale-110 duration-500 border-b-4 border-blue-700
@@ -19,6 +26,4 @@ const Page = () => {
 
     </section>
   )
-};
-
-export default Page;
+}
