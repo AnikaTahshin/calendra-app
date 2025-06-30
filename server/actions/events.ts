@@ -86,15 +86,30 @@ export async function deleteEvent(id: string): Promise<void> {
 }
 
 
+type EventRow = typeof eventTable.$inferSelect
+
 // created events lists
-export async function getEvents(userId: string):<Promise<EventRow[]> {
+export async function getEvents(clerkUserId: string):Promise<EventRow[]> {
   try {
-    const events = await db
-      .select()
-      .from(eventTable)
-      .where(eq(eventTable.clerkUserId, userId));
+    const events = await db.query.eventTable.findMany({
+        where: ({clerkUserId:userIdCol}, {eq}) => eq(userIdCol, clerkUserId),
+        orderBy:({name}, {asc, sql}) => asc(sql`lower(${name})`),
+    })
     return events;
+      
   } catch (error: any) {
     throw new Error(`Failed to fetch events: ${error.message || error}`);
   }
 }   
+
+
+
+// getEvent by id
+export async function getEvent(userId: string, eventId: string): Promise<EventRow | undefined> {
+  const event = await db.query.eventTable.findFirst({
+    where: ({ id, clerkUserId }, { and, eq }) =>
+      and(eq(clerkUserId, userId), eq(id, eventId)), // Make sure the event belongs to the user
+  })
+
+  return event ?? undefined // Explicitly return undefined if not found
+}
