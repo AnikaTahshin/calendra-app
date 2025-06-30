@@ -38,7 +38,6 @@ export default function CopyEventButton({
 
   const handleCopy = () => {
     const url = `${location.origin}/book/${clerkUserId}/${eventId}`; 
-    console.log("Copying URL:", url); // Log the URL for debugging
     navigator.clipboard
       .writeText(url) // Try to copy the URL
       .then(() => {
@@ -56,16 +55,14 @@ export default function CopyEventButton({
 
   return (
     <Button
-      className={cn(
-        buttonVariants({ variant, size, className }),
-        "cursor-pointer",
-        className
-      )}
-      {...props}
-      onClick={handleCopy}
-    >
-      <CopyIcon className="mr-2 size-4" />
-      {getCopyLabel(copyState)}
-    </Button>
+          onClick={handleCopy}
+          className={cn(buttonVariants({ variant, size }), 'cursor-pointer', className)} 
+          variant={variant}
+          size={size}
+          {...props}
+        >
+          <CopyIcon className="size-4 mr-2" /> 
+          {getCopyLabel(copyState)} 
+        </Button>
   );
 }

@@ -25,12 +25,16 @@ index("clerkUserIdIndex").on(table.clerkUserId),
 )
 
 export const ScheduleTable = pgTable("schedules", {
-id:uuid("id").primaryKey().defaultRandom(),
-timezone:text("timezone").notNull(),
-clerkUserId:text("clerkUserId").notNull().unique(),
-createdAt,
-updatedAt
-})
+    id: uuid("id").primaryKey().defaultRandom(),         
+    timezone: text("timezone").notNull(),                
+    clerkUserId: text("clerkUserId").notNull().unique(), 
+    createdAt,                                           
+    updatedAt,                                           
+  })
+
+    export const scheduleRelations = relations(ScheduleTable, ({ many }) => ({
+    availabilities: many(ScheduleAvailabilityTable), 
+  }))
 
 export const scheduleRelation = relations(ScheduleTable, ({many}) => ({
     availibilities: many(ScheduleAvailabilityTable)
