@@ -1,7 +1,19 @@
-import React from "react";
+'use client'
+import Loading from '@/components/Loading'
+import { useUser } from '@clerk/nextjs'
+import { redirect } from 'next/navigation'
+import React from 'react'
 
-const Page = () => {
-  return <h1>Book page</h1>;
-};
+export default function PublicPage() {
+  const {user, isLoaded} = useUser()
 
-export default Page;
+  if (!isLoaded) {
+    return <Loading />
+  }
+
+  if (!user) {
+    return redirect('/login')
+  }
+  
+  return redirect(`/book/${user.id}`) 
+}
