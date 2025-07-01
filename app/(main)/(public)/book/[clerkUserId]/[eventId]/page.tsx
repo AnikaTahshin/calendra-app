@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { clerkClient } from "@clerk/nextjs/server";
 import { getValidTimesFromSchedule } from "@/server/actions/schedule";
 import NoTimeSlots from "@/components/NoTimeSlots";
+import MeetingForm from "@/components/forms/MeetingForm";
 
 export default async function BookingPage({
     params
@@ -64,7 +65,11 @@ export default async function BookingPage({
         )}
       </CardHeader>
       <CardContent>
-        
+        <MeetingForm
+          validTimes={validTimes}
+          eventId={event.id}
+          clerkUserId={clerkUserId}
+        />
       </CardContent>
     </Card>
   )   

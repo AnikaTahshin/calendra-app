@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { BatchItem } from "drizzle-orm/batch";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { string, z } from "zod";
 import { getCalendarEventTimes } from "../google/googleCalender";
 import { fromZonedTime } from "date-fns-tz";
 import { addMinutes, areIntervalsOverlapping, isFriday, isMonday, isSaturday, isSunday, isThursday, isTuesday, isWednesday, isWithinInterval, setHours, setMinutes } from "date-fns";
@@ -122,10 +122,10 @@ export async function getValidTimesFromSchedule(
    if (schedule == null) return []
 
   // Group availabilities by day of the week (e.g., Monday, Tuesday)
-  const groupedAvailabilities = Object.groupBy(
-    schedule.availabilities,
-    a => a.dayOfWeek
-  )
+  const groupedAvailabilities = schedule.availabilities.reduce((acc, a) => {
+    (acc[a.dayOfWeek] = acc[a.dayOfWeek] || []).push(a);
+    return acc;
+  }, {} as Record<string, typeof schedule.availabilities>);
 
    // Fetch all existing Google Calendar events between start and end
    const eventTimes = await getCalendarEventTimes(userId, {
